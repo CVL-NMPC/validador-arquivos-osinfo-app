@@ -7,11 +7,11 @@ import utils.cabecalho as cabecalho
 from io import StringIO
 import pandas as pd
 import datetime
+import classes.ModelosArquivos as modeloArquivos
 import classes.DespesasDFImportacao as DespesasDFImportacao
 import classes.ContratosTerceirosDFImportacao as ContratosTerceirosDFImportacao
 import classes.SaldosDFImportacao as SaldosDFImportacao
 import classes.BensPatrimoniadosDFImportacao as BensPatrimoniadosDFImportacao
-
 
 cabecalho.criar_cabecalho("Validação de arquivos de importação", "Validação Arquivos OSINFO")
 
@@ -38,8 +38,7 @@ with st.form('Valida Importação', clear_on_submit=False):
                 cabecalhoArquivo = string_data.readline().strip()
                 string_data.seek(0)
                 
-                meuModelo = util.Modelo()
-                cabecalhoArquivo = meuModelo.trataCabecalho(cabecalhoArquivo)
+                cabecalhoArquivo =  modeloArquivos.ModeloArqruivos.trataCabecalho(cabecalhoArquivo)
 
                 df = pd.read_csv(string_data, sep=';', header=0, index_col=False, dtype=str)
                 tamanho = len(df)                        
@@ -48,29 +47,23 @@ with st.form('Valida Importação', clear_on_submit=False):
                 st.dataframe(df)                        
 
                 # Convertendo para string para garantir que não haja problemas
-                listaOS = [column for column in df.columns if column in meuModelo.listaOS]                        
+                los = modeloArquivos.ModeloArqruivos.get_os_list_type()
+                listaOS = [column for column in df.columns if column in los]                        
                 if not len(listaOS) > 0:
                     raise Exception("Não foi possível identificar o código da instituição no arquivo enviado")
 
                 if len(listaOS) > 0:
                     verificador = util.Validadora(st.secrets['base_url'], df[listaOS].iloc[0,0])
-                    listaDatasCompletas = [column for column in df.columns if column in meuModelo.datasCompletas]
-                    listaDatasAbreviadas = [column for column in df.columns if column in meuModelo.datasAbreviadas]
-                    listacamposPDF = [column for column in df.columns if column in meuModelo.documentosPDF]
-                    listaDatasCompletasRenomeado = [column + '_VALIDADA' for column in df.columns if column in meuModelo.datasCompletas]
-                    listaDatasAbreviadasRenomeadas = [column + '_VALIDADA' for column in df.columns if column in meuModelo.datasAbreviadas]
-                    listacamposPDFRenomeados = ['TEM_IMAGEM' for column in df.columns if column in meuModelo.documentosPDF]
-                
                     if tipoarquivoEscolhido == "Despesas":
-                        despesas = DespesasDFImportacao.DespesasDFImportacao(df, st.secrets['base_url'], listaOS, pBar)
+                        despesas = DespesasDFImportacao.DespesasDFImportacao(df, st.secrets['base_url'], listaOS, pBar, 'despesas', 'importacao')
                         despesas.check_header()
-                        st.info('O cabeçalho é compatível com o modelo DESPESAS GNOSIS.')
+                        st.info('O cabeçalho é compatível com o modelo DESPESAS.')
                         if despesas.check_df_data():
                             validou = 1
                         st.dataframe(df) 
 
                     elif tipoarquivoEscolhido == "Contratos de Terceiros":
-                        contratos = ContratosTerceirosDFImportacao.ContratosTerceirosDFImportacao(df, st.secrets['base_url'], listaOS, pBar)
+                        contratos = ContratosTerceirosDFImportacao.ContratosTerceirosDFImportacao(df, st.secrets['base_url'], listaOS, pBar, 'contratos_terceiros', 'importacao')
                         contratos.check_header()
                         st.info('O cabeçalho é compatível com o modelo CONTRATOS DE TERCEIROS.')
                         if contratos.check_df_data():
@@ -78,7 +71,7 @@ with st.form('Valida Importação', clear_on_submit=False):
                         st.dataframe(df)
                             
                     elif tipoarquivoEscolhido == "Saldos":
-                        saldos = SaldosDFImportacao.SaldosDFImportacao(df, st.secrets['base_url'], listaOS, pBar)
+                        saldos = SaldosDFImportacao.SaldosDFImportacao(df, st.secrets['base_url'], listaOS, pBar, 'saldos', 'importacao')
                         saldos.check_header()
                         st.info('O cabeçalho é compatível com o modelo SALDOS.')
                         if saldos.check_df_data():
@@ -86,7 +79,7 @@ with st.form('Valida Importação', clear_on_submit=False):
                         st.dataframe(df)
 
                     elif tipoarquivoEscolhido == "Bens Patrimoniados":
-                        bens = BensPatrimoniadosDFImportacao.BensPatrimoniadosDFImportacao(df, st.secrets['base_url'], listaOS, pBar)
+                        bens = BensPatrimoniadosDFImportacao.BensPatrimoniadosDFImportacao(df, st.secrets['base_url'], listaOS, pBar, 'bens_patrimoniados', 'importacao')
                         bens.check_header()
                         st.info('O cabeçalho é compatível com o modelo SALDOS.')
                         if bens.check_df_data():

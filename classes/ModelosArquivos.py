@@ -1,0 +1,100 @@
+
+class ModeloArqruivos:
+    def __init__(self, modulo = None, tipo = None):
+        if not modulo or not tipo:
+            raise Exception('Os parametros modulo e tipo são obrigatórios ao instanciar um Modelo de Arquivo')
+        
+        self.modulo = modulo
+        self.tipo = tipo
+
+        self.cabecalhoStr = ''
+        self.cabecalho = []
+        self.datasAbreviadas = []
+        self.datasCompletas = []
+        self.camposObrigatorios = []
+        self.camposMonetarios = []
+        self.limitesTamanho = {}
+
+        if modulo == 'despesas' and tipo == 'importacao':
+            self.modulo_despesas_tipo_importacao()
+        elif modulo == 'bens_patrimoniados' and tipo == 'importacao':
+            self.modulo_bens_patrimoniados_tipo_importacao()
+        elif modulo == 'contratos_terceiros' and tipo == 'importacao':
+            self.modulo_contratos_terceiros_tipo_importacao()
+        elif modulo == 'saldos' and tipo == 'importacao':
+            self.modulo_saldos_tipo_importacao()
+        else:
+            raise Exception('Modulo e/ou Tipo de Arquivo não implementado')        
+
+
+    def retornaCabecalho(self):     
+        if not self.cabecalho:
+            self.cabecalho = self.trataCabecalho(self.cabecalho_str)
+        return self.cabecalho
+    
+    def contemCabecalho(self,cabecalhoModelo,cabecalhoArquivo):
+        todosContidos = all(item in cabecalhoArquivo for item in cabecalhoModelo)
+        if todosContidos:
+            return True
+        else:
+            return False
+
+    def retornaCabecalho(self):     
+        if not self.cabecalho:
+            self.cabecalho = self.trataCabecalho(self.cabecalho_str)
+        return self.cabecalho
+    
+    def contemCabecalho(self,cabecalhoModelo,cabecalhoArquivo):
+        todosContidos = all(item in cabecalhoArquivo for item in cabecalhoModelo)
+        if todosContidos:
+            return True
+        else:
+            return False
+
+    def modulo_despesas_tipo_importacao(self):
+        self.cabecalhoStr = 'COD_OS;COD_UNIDADE;COD_CONTRATO;ANO_MES_REF;TIPO;CODIGO;CNPJ;RAZAO;CPF;NOME;NUM_DOCUMENTO;SERIE;DESCRICAO;DATA_EMISSAO;DATA_VENCIMENTO;DATA_PAGAMENTO;DATA_APURACAO;VALOR_DOCUMENTO;VALOR_PAGO;DESPESA;RUBRICA;BANCO;AGENCIA;CONTA_CORRENTE;PMT_PAGA;QTDE_PMT;IDENT_BANCARIO;FLAG_JUSTIFICATIVA'
+        self.cabecalho = ModeloArqruivos.trataCabecalho(self.cabecalhoStr)
+        self.datasAbreviadas = []
+        self.datasCompletas = ['DATA_EMISSAO','DATA_VENCIMENTO','DATA_PAGAMENTO','DATA_APURACAO','DATA_EMISSAO','DATA_VENCIMENTO','DATA_PAGAMENTO','DATA_APURACAO']
+        self.camposObrigatorios = ["COD_OS", "COD_UNIDADE", "COD_CONTRATO", "ANO_MES_REF", "TIPO", "DESCRICAO", "DATA_VENCIMENTO", "DATA_PAGAMENTO", "DATA_APURACAO", 
+                                    "VALOR_DOCUMENTO", "VALOR_PAGO", "DESPESA", "RUBRICA", "BANCO", "AGENCIA", "CONTA_CORRENTE", "PMT_PAGA", "QTDE_PMT", "IDENT_BANCARIO", "FLAG_JUSTIFICATIVA"]
+        self.camposMonetarios = ['VALOR_DOCUMENTO','VALOR_PAGO','VALOR_DOCUMENTO','VALOR_PAGO']
+        self.limitesTamanho = {"RAZAO" : 100, "NOME" : 100, "DESCRICAO" : 150, "NUM_DOCUMENTO" : 20, "SERIE" : 3, "DESPESA" : 50, "IDENT_BANCARIO" : 100}
+
+    def modulo_bens_patrimoniados_tipo_importacao(self):
+        self.cabecalhoStr = 'COD_OS;COD_UNIDADE;COD_CONTRATO;ANO_MES_REF;NUM_CONTROLE_OS;NUM_CONTROLE_GOV;COD_TIPO;BEM_TIPO;DESCRICAO_NF;CNPJ;FORNECEDOR;QUANTIDADE;NF;DATA_AQUISICAO;VIDA_UTIL;VALOR;VINCULACAO;SETOR_DESTINO;IMG_NF'
+        self.cabecalho = ModeloArqruivos.trataCabecalho(self.cabecalhoStr)
+        self.datasAbreviadas = ['ANO_MES_REF']
+        self.datasCompletas = ['DATA_AQUISICAO']
+        self.camposObrigatorios = [ "COD_OS", "COD_UNIDADE", "COD_CONTRATO", "ANO_MES_REF", "NUM_CONTROLE_OS", "COD_TIPO", "BEM_TIPO", "DESCRICAO_NF", "CNPJ", "FORNECEDOR", "QUANTIDADE", "NF", "DATA_AQUISICAO", "VIDA_UTIL", "VALOR", "VINCULACAO", "IMG_NF"]
+        self.camposMonetarios = ['VALOR']
+        self.limitesTamanho =  {"DESCRICAO_NF" : 255, "FORNECEDOR" : 255, "NF" : 20, "VINCULACAO" : 255, "SETOR_DESTINO" : 100}
+
+    def modulo_saldos_tipo_importacao(self):
+        self.cabecalhoStr = 'COD_OS;COD_UNIDADE;COD_CONTRATO;ANO_MES_REF;BANCO;AGENCIA;CONTA_CORRENTE;VL_CONTA_CORRENTE;VL_APL_FINANCEIRA;VL_CONTA_PROVISAO;VL_EM_ESPECIE;EXTRATO'
+        self.cabecalho = ModeloArqruivos.trataCabecalho(self.cabecalhoStr)
+        self.datasAbreviadas = ['ANO_MES_REF']
+        self.datasCompletas = []
+        self.camposObrigatorios = [ "COD_OS", "COD_UNIDADE", "COD_CONTRATO", "ANO_MES_REF", "BANCO", "AGENCIA", "CONTA_CORRENTE", "VL_CONTA_CORRENTE", "VL_APL_FINANCEIRA", "VL_CONTA_PROVISAO", "VL_EM_ESPECIE", "EXTRATO"]
+        self.camposMonetarios = ['VL_CONTA_CORRENTE','VL_APL_FINANCEIRA','VL_CONTA_PROVISAO','VL_EM_ESPECIE']
+        self.limitesTamanho = {}
+
+    def modulo_contratos_terceiros_tipo_importacao(self):
+        self.cabecalhoStr = 'COD_OS;COD_UNIDADE;COD_CONTRATO;RAZAO_SOCIAL;CNPJ;SERVICO;VALOR_MES;VIGENCIA;CONTRATO_ANO_MES_INICIO;CONTRATO_ANO_MES_FIM;REF_TRI;REF_ANO_MES;IMG_CONTRATO'
+        self.cabecalho =  ModeloArqruivos.trataCabecalho(self.cabecalhoStr)
+        self.datasAbreviadas = ['CONTRATO_ANO_MES_INICIO','CONTRATO_ANO_MES_FIM','REF_TRI']
+        self.datasCompletas = ['REF_ANO_MES']
+        self.camposObrigatorios = [ "COD_OS",  "COD_UNIDADE",  "COD_CONTRATO",  "RAZAO_SOCIAL",  "CNPJ",  "SERVICO",  "VALOR_MES",  "VIGENCIA",  "CONTRATO_ANO_MES_INICIO",  "CONTRATO_ANO_MES_FIM",  "REF_TRI",  "REF_ANO_MES",  "IMG_CONTRATO" ]
+        self.camposMonetarios = ['VALOR_MES']
+        self.limitesTamanho = { "RAZAO_SOCIAL" : 100 }
+    
+    @staticmethod
+    def trataCabecalho(cabecalho):
+        cabecalhoTratado = cabecalho
+        cabecalhoTratado = cabecalhoTratado.replace(" ","").strip('\r\n').upper()
+        cabecalhoTratado = cabecalhoTratado.split(";")
+        return cabecalhoTratado
+
+    @staticmethod
+    def get_os_list_type():
+        return ['COD_OS','ORGANIZACAO']
