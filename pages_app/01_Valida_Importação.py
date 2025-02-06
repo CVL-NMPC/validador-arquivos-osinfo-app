@@ -12,11 +12,14 @@ import classes.DespesasDFImportacao as DespesasDFImportacao
 import classes.ContratosTerceirosDFImportacao as ContratosTerceirosDFImportacao
 import classes.SaldosDFImportacao as SaldosDFImportacao
 import classes.BensPatrimoniadosDFImportacao as BensPatrimoniadosDFImportacao
+import classes.FornecedoresDFImportacao as FornecedoresDFImportacao
+import classes.ItensNotaFiscalDFImportacao as ItensNFDFImportacao
+import classes.ReceitasDFImportacao as ReceitasDFImportacao
 
 cabecalho.criar_cabecalho("Validação de arquivos de importação", "Validação Arquivos OSINFO")
 
 # listas
-tipoArquivo = ['Despesas', 'Contratos de Terceiros', 'Saldos', 'Bens Patrimoniados']
+tipoArquivo = ['Despesas', 'Contratos de Terceiros', 'Saldos', 'Bens Patrimoniados', 'Itens de Nota Fiscal']
 
 secretarias = util.obter_instituicoes()
 instituicoes = util.carregaInstituicoes()
@@ -85,10 +88,40 @@ with st.form('Valida Importação', clear_on_submit=False):
                         if bens.check_df_data():
                             validou = 1
                         st.dataframe(df)
+
+                    elif tipoarquivoEscolhido == "Fornecedores":
+                        bens = FornecedoresDFImportacao.FornecedoresDFImportacao(df, st.secrets['base_url'], listaOS, pBar, 'fornecedores', 'importacao')
+                        bens.check_header()
+                        st.info('O cabeçalho é compatível com o modelo FORNECEDORES.')
+                        if bens.check_df_data():
+                            validou = 1
+                        st.dataframe(df)
+                    
+                    elif tipoarquivoEscolhido == "Itens de Nota Fiscal":
+                        bens = ItensNFDFImportacao.ItensNotaFiscalDFImportacao(df, st.secrets['base_url'], listaOS, pBar, 'itens_nota_fiscal', 'importacao')
+                        bens.check_header()
+                        st.info('O cabeçalho é compatível com o modelo ITENS NOTA FISCAL.')
+                        if bens.check_df_data():
+                            validou = 1
+                        st.dataframe(df)
+
+                    elif tipoarquivoEscolhido == "Receitas":
+                        bens = ItensNFDFImportacao.ItensNotaFiscalDFImportacao(df, st.secrets['base_url'], listaOS, pBar, 'receitas', 'importacao')
+                        bens.check_header()
+                        st.info('O cabeçalho é compatível com o modelo RECEITAS.')
+                        if bens.check_df_data():
+                            validou = 1
+                        st.dataframe(df)  
                     else:
                         st.warning("Não foi possível identificar qual a verificação deve ser realizada.", icon="⚠️")
                     
-                    st.success('Processamento concluído!')
+                    filtroProblemas = df[df['PROBLEMAS'] != '' ]
+                    if filtroProblemas.shape[0] > 0 :
+                        st.warning(f"O arquivo possui {filtroProblemas.shape[0]} linhas com problemas")
+                        st.warning(f"Verifique a coluna PROBLEMAS na planilha acima ou baixe o arquivo")
+                    else:
+                        st.success(f"Arquivo processado sem linhas com problemas")
+
             except UnicodeDecodeError:
                 st.error(util.erros["02"])
             except Exception as e:

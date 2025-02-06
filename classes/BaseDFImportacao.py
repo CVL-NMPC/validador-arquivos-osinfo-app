@@ -138,7 +138,7 @@ class BaseDFImportacao:
         valor = str(self.df.at[index, 'DESPESA'])
         dfFiltrado = self.dfCodigosDespesas[ self.dfCodigosDespesas['cod_despesa'] == valor ]
         if dfFiltrado.empty:
-            resultado = f"Código de DESPESA não é valido ({valor})"
+            resultado = f"Código de DESPESA não é valido"
         return resultado
 
     def check_rubrica(self, index):
@@ -146,7 +146,7 @@ class BaseDFImportacao:
         valor = self.df.at[index, 'RUBRICA']
         dfFiltrado = self.dfRubricas[ self.dfRubricas['id_rubrica'] == int(valor) ]
         if dfFiltrado.empty:
-            resultado = f"A RUBRICA não é valida ({valor})"
+            resultado = f"A RUBRICA não é valida"
         return resultado
     
     def check_tipo_documento(self, index):
@@ -154,7 +154,7 @@ class BaseDFImportacao:
         valor = str(self.df.at[index, 'TIPO'])
         dfFiltrado = self.dfTiposDocumentos[ self.dfTiposDocumentos['cod_tipo_documento'] == valor ]
         if dfFiltrado.empty:
-            resultado = f"O TIPO de documento não é valido ({valor})"
+            resultado = f"O TIPO de documento não é valido"
         return resultado
 
     def check_integrity_TipoNF_vs_NumDocumento(self, index):
@@ -182,7 +182,7 @@ class BaseDFImportacao:
                 if not pd.isnull(valor):
                     padrao = re.compile(r'^\d{4}-\d{2}-\d{2}$')
                     if not re.match(padrao, str(valor)):
-                        resultado += ', ' + f"{campo} possui formato invalido {valor}"
+                        resultado += ', ' + f"{campo} possui formato invalido"
         return resultado
 
     def check_short_dates(self, index):
@@ -193,7 +193,7 @@ class BaseDFImportacao:
                 if not pd.isnull(valor):
                     padrao = re.compile(r'^\d{4}-\d{2}$')
                     if not re.match(padrao, str(valor)):
-                        resultado += ', ' + f"{campo} possui formato invalido {valor}"
+                        resultado += ', ' + f"{campo} possui formato invalido"
         return resultado
     
     def formatar_url(self, nome_imagem):
@@ -229,15 +229,15 @@ class BaseDFImportacao:
         valor = self.df.at[index, 'CPF']
         if not pd.isnull(valor):
             if not cpfcnpj.validate(valor):
-                resultado += ', ' + f"CPF possui formato invalido {valor}"
+                resultado += ', ' + f"CPF possui formato invalido"
         return resultado
 
-    def check_cnpj(self, index):
+    def check_cnpj(self, index, campo = 'CNPJ'):
         resultado = ''
-        valor = self.df.at[index, 'CNPJ']
+        valor = self.df.at[index, campo]
         if not pd.isnull(valor):
             if not cpfcnpj.validate(valor):
-                resultado += ', ' + f"CNPJ possui formato invalido {valor}"
+                resultado += ', ' + f"{campo} possui formato invalido"
         return resultado
     
     def check_short_dates(self, index):
@@ -248,7 +248,7 @@ class BaseDFImportacao:
                 if not pd.isnull(valor):
                     padrao = re.compile(r'^\d{4}-\d{2}$')
                     if not re.match(padrao, str(valor)):
-                        resultado += ', ' + f"{campo} possui formato invalido {valor}"
+                        resultado += ', ' + f"{campo} possui formato invalido"
         return resultado
     
     def check_currency_values_br(self, index):
@@ -259,7 +259,7 @@ class BaseDFImportacao:
                 if not pd.isnull(valor):
                     padrao = re.compile(r'\d+(\.\d{3})*(,\d{1,2})?')
                     if not re.fullmatch(padrao, str(valor)):
-                        resultado += ', ' + f"{campo} possui formato invalido {valor}"
+                        resultado += ', ' + f"{campo} possui formato invalido"
         return resultado  
         
     def check_chars_len(self, index):

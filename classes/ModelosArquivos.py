@@ -23,6 +23,12 @@ class ModeloArqruivos:
             self.modulo_contratos_terceiros_tipo_importacao()
         elif modulo == 'saldos' and tipo == 'importacao':
             self.modulo_saldos_tipo_importacao()
+        elif modulo == 'fornecedores' and tipo == 'importacao':
+            self.modulo_fornecedores_tipo_importacao()
+        elif modulo == 'itens_nota_fiscal' and tipo == 'importacao':
+            self.modulo_itens_nota_fiscal_tipo_importacao()
+        elif modulo == 'receitas' and tipo == 'importacao':
+            self.modulo_receitas_tipo_importacao()
         else:
             raise Exception('Modulo e/ou Tipo de Arquivo não implementado')        
 
@@ -87,7 +93,34 @@ class ModeloArqruivos:
         self.camposObrigatorios = [ "COD_OS",  "COD_UNIDADE",  "COD_CONTRATO",  "RAZAO_SOCIAL",  "CNPJ",  "SERVICO",  "VALOR_MES",  "VIGENCIA",  "CONTRATO_ANO_MES_INICIO",  "CONTRATO_ANO_MES_FIM",  "REF_TRI",  "REF_ANO_MES",  "IMG_CONTRATO" ]
         self.camposMonetarios = ['VALOR_MES']
         self.limitesTamanho = { "RAZAO_SOCIAL" : 100 }
-    
+
+    def modulo_fornecedores_tipo_importacao(self):
+        self.cabecalhoStr = ''
+        self.cabecalho =  ModeloArqruivos.trataCabecalho(self.cabecalhoStr)
+        self.datasAbreviadas = []
+        self.datasCompletas = []
+        self.camposObrigatorios = []
+        self.camposMonetarios = []
+        self.limitesTamanho = { }
+
+    def modulo_itens_nota_fiscal_tipo_importacao(self):
+        self.cabecalhoStr = 'COD_OS;COD_MAT_SERV;DESC_MAT_SERV;UNID_MED;PREC_UNIT;QTD;VLR_TOT_ITEM;NF;CNPJ_FORN;MAT_OU_SERV;MES_ANO;OBS'
+        self.cabecalho =  ModeloArqruivos.trataCabecalho(self.cabecalhoStr)
+        self.datasAbreviadas = ["MES_ANO"]
+        self.datasCompletas = []
+        self.camposObrigatorios = ["COD_OS","COD_MAT_SERV","DESC_MAT_SERV","UNID_MED","PREC_UNIT","QTD","VLR_TOT_ITEM","NF","CNPJ_FORN","MAT_OU_SERV","MES_ANO"]
+        self.camposMonetarios = ["PREC_UNIT", "VLR_TOT_ITEM"]
+        self.limitesTamanho = { "DESC_MAT_SERV" : 700, "UNID_MED" : 50, "NF" : 20, "OBS" : 250, "COD_MAT_SERV" : 12}
+
+    def modulo_receitas_tipo_importacao(self):
+        self.cabecalhoStr = ''
+        self.cabecalho =  ModeloArqruivos.trataCabecalho(self.cabecalhoStr)
+        self.datasAbreviadas = []
+        self.datasCompletas = []
+        self.camposObrigatorios = []
+        self.camposMonetarios = []
+        self.limitesTamanho = { }        
+
     @staticmethod
     def trataCabecalho(cabecalho):
         cabecalhoTratado = cabecalho
