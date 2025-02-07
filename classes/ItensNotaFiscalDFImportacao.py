@@ -6,6 +6,7 @@ class ItensNotaFiscalDFImportacao (baseDfImportacao.BaseDFImportacao):
     def __init__(self, dataframe = None, base_url=None, listaOS=None, progress_bar = None, modulo = None, tipo_arquivo = None):
         super().__init__(dataframe, base_url, listaOS, progress_bar, modulo, tipo_arquivo)
         self.nome_classe = 'ITENS NOTA FISCAL'
+        self.checked_sigma_number = pd.DataFrame()
 
     def load_lists_from_osinfo_subclasse(self):
         pass
@@ -21,6 +22,7 @@ class ItensNotaFiscalDFImportacao (baseDfImportacao.BaseDFImportacao):
         problemas.append(self.check_cnpj(index, 'CNPJ_FORN'))
         problemas.append(self.check_currency_values_br(index))
         problemas.append(self.check_chars_len(index))
+        problemas.append(self.check_sigma_number(index))
         return problemas
 
     def check_tipo_item(self, index):
@@ -29,3 +31,15 @@ class ItensNotaFiscalDFImportacao (baseDfImportacao.BaseDFImportacao):
         if not valor in ['S', 'M']:
             resultado = f"O TIPO de documento não é valido ({valor})"
         return resultado
+    
+    def check_sigma_number(self, index):
+        url = self.base_url + '/sigma/server/sigmaService/getItemsServiceListAutoComplete'
+        try:
+            sigma = 'd=' + str(self.df.at[index, 'COD_MAT_SERV'])
+            requisicao = requests.post(url, data=sigma)
+            requisicao.raise_for_status()
+            dados_sigma = pd.DataFrame(data=requisicao.json())
+            if dados_sigma.empty:
+                return f"O código Sigma na coluna COD_MAT_SERV nao foi encontrado."
+        except requests.exceptions.RequestException as e:
+            raise Exception(f"Erro ao obter lista de tipos de documentos: {e}")    
