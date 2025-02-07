@@ -1,6 +1,7 @@
 import requests
 import re
 import classes.BaseDFImportacao as baseDfImportacao
+import pandas as pd
 
 class DespesasDFImportacao (baseDfImportacao.BaseDFImportacao):
     def __init__(self, dataframe = None, base_url=None, listaOS=None, progress_bar = None, modulo = None, tipo_arquivo = None):
@@ -63,7 +64,7 @@ class DespesasDFImportacao (baseDfImportacao.BaseDFImportacao):
         valor = str(self.df.at[index, 'DESPESA'])
         dfFiltrado = self.dfCodigosDespesas[ self.dfCodigosDespesas['cod_despesa'] == valor ]
         if dfFiltrado.empty:
-            resultado = f"Código de DESPESA não é valido ({valor})"
+            resultado = f"Código de DESPESA não é valido"
         return resultado
 
     def check_rubrica(self, index):
@@ -71,7 +72,7 @@ class DespesasDFImportacao (baseDfImportacao.BaseDFImportacao):
         valor = self.df.at[index, 'RUBRICA']
         dfFiltrado = self.dfRubricas[ self.dfRubricas['id_rubrica'] == int(valor) ]
         if dfFiltrado.empty:
-            resultado = f"A RUBRICA não é valida ({valor})"
+            resultado = f"A RUBRICA não é valida"
         return resultado
     
     def check_tipo_documento(self, index):
@@ -79,7 +80,7 @@ class DespesasDFImportacao (baseDfImportacao.BaseDFImportacao):
         valor = str(self.df.at[index, 'TIPO'])
         dfFiltrado = self.dfTiposDocumentos[ self.dfTiposDocumentos['cod_tipo_documento'] == valor ]
         if dfFiltrado.empty:
-            resultado = f"O TIPO de documento não é valido ({valor})"
+            resultado = f"O TIPO de documento não é valido"
         return resultado
 
     def check_integrity_TipoNF_vs_NumDocumento(self, index):

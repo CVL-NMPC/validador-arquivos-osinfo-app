@@ -84,7 +84,7 @@ with st.form('Valida Importação', clear_on_submit=False):
                     elif tipoarquivoEscolhido == "Bens Patrimoniados":
                         bens = BensPatrimoniadosDFImportacao.BensPatrimoniadosDFImportacao(df, st.secrets['base_url'], listaOS, pBar, 'bens_patrimoniados', 'importacao')
                         bens.check_header()
-                        st.info('O cabeçalho é compatível com o modelo SALDOS.')
+                        st.info('O cabeçalho é compatível com o modelo BENS PATRIMONIADOS.')
                         if bens.check_df_data():
                             validou = 1
                         st.dataframe(df)

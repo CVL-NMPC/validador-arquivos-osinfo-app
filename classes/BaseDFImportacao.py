@@ -103,7 +103,7 @@ class BaseDFImportacao:
         valor = str(self.df.at[index, 'COD_UNIDADE'])
         dfFiltrado = self.dfUnidades[ self.dfUnidades['cod_unidade'] == valor ]
         if dfFiltrado.empty:
-            resultado = f"Código da UNIDADE não é valido ({valor})"
+            resultado = f"Código da UNIDADE não é valido"
         return resultado
 
 
@@ -213,11 +213,11 @@ class BaseDFImportacao:
             response = self.session.head(self.url_pdf_formatada, timeout=10)
             if response.status_code == 200:
                 if int(response.headers.get('Content-Length', 1)) == 0:
-                    status = f"Imagem corrompida ({nome_imagem})"
+                    status = f"Imagem corrompida"
                 else:
                     status = ''
             else:
-                status = f"Imagem ausente ({nome_imagem})"
+                status = f"Imagem ausente"
         except requests.RequestException as e:
             status = f"Erro de verificação: {str(e)}"
 
