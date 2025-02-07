@@ -58,11 +58,11 @@ class ModeloArqruivos:
             return False
 
     def modulo_despesas_tipo_importacao(self):
-        self.cabecalhoStr = 'COD_OS;COD_UNIDADE;COD_CONTRATO;ANO_MES_REF;TIPO;CODIGO;CNPJ;RAZAO;CPF;NOME;NUM_DOCUMENTO;SERIE;DESCRICAO;DATA_EMISSAO;DATA_VENCIMENTO;DATA_PAGAMENTO;DATA_APURACAO;VALOR_DOCUMENTO;VALOR_PAGO;DESPESA;RUBRICA;BANCO;AGENCIA;CONTA_CORRENTE;PMT_PAGA;QTDE_PMT;IDENT_BANCARIO;FLAG_JUSTIFICATIVA'
+        self.cabecalhoStr = 'D;COD_OS;COD_UNIDADE;COD_CONTRATO;ANO_MES_REF;TIPO;CODIGO;CNPJ;RAZAO;CPF;NOME;NUM_DOCUMENTO;SERIE;DESCRICAO;DATA_EMISSAO;DATA_VENCIMENTO;DATA_PAGAMENTO;DATA_APURACAO;VALOR_DOCUMENTO;VALOR_PAGO;DESPESA;RUBRICA;BANCO;AGENCIA;CONTA_CORRENTE;PMT_PAGA;QTDE_PMT;IDENT_BANCARIO;FLAG_JUSTIFICATIVA'
         self.cabecalho = ModeloArqruivos.trataCabecalho(self.cabecalhoStr)
         self.datasAbreviadas = []
         self.datasCompletas = ['DATA_EMISSAO','DATA_VENCIMENTO','DATA_PAGAMENTO','DATA_APURACAO','DATA_EMISSAO','DATA_VENCIMENTO','DATA_PAGAMENTO','DATA_APURACAO']
-        self.camposObrigatorios = ["COD_OS", "COD_UNIDADE", "COD_CONTRATO", "ANO_MES_REF", "TIPO", "DESCRICAO", "DATA_VENCIMENTO", "DATA_PAGAMENTO", "DATA_APURACAO", 
+        self.camposObrigatorios = ["D", "COD_OS", "COD_UNIDADE", "COD_CONTRATO", "ANO_MES_REF", "TIPO", "DESCRICAO", "DATA_VENCIMENTO", "DATA_PAGAMENTO", "DATA_APURACAO", 
                                     "VALOR_DOCUMENTO", "VALOR_PAGO", "DESPESA", "RUBRICA", "BANCO", "AGENCIA", "CONTA_CORRENTE", "PMT_PAGA", "QTDE_PMT", "IDENT_BANCARIO", "FLAG_JUSTIFICATIVA"]
         self.camposMonetarios = ['VALOR_DOCUMENTO','VALOR_PAGO','VALOR_DOCUMENTO','VALOR_PAGO']
         self.limitesTamanho = {"RAZAO" : 100, "NOME" : 100, "DESCRICAO" : 150, "NUM_DOCUMENTO" : 20, "SERIE" : 3, "DESPESA" : 50, "IDENT_BANCARIO" : 100}
@@ -86,11 +86,11 @@ class ModeloArqruivos:
         self.limitesTamanho = {}
 
     def modulo_contratos_terceiros_tipo_importacao(self):
-        self.cabecalhoStr = 'COD_OS;COD_UNIDADE;COD_CONTRATO;RAZAO_SOCIAL;CNPJ;SERVICO;VALOR_MES;VIGENCIA;CONTRATO_ANO_MES_INICIO;CONTRATO_ANO_MES_FIM;REF_TRI;REF_ANO_MES;IMG_CONTRATO'
+        self.cabecalhoStr = 'D;COD_OS;COD_UNIDADE;COD_CONTRATO;RAZAO_SOCIAL;CNPJ;SERVICO;VALOR_MES;VIGENCIA;CONTRATO_ANO_MES_INICIO;CONTRATO_ANO_MES_FIM;REF_TRI;REF_ANO_MES;IMG_CONTRATO'
         self.cabecalho =  ModeloArqruivos.trataCabecalho(self.cabecalhoStr)
         self.datasAbreviadas = ['CONTRATO_ANO_MES_INICIO','CONTRATO_ANO_MES_FIM','REF_TRI']
         self.datasCompletas = ['REF_ANO_MES']
-        self.camposObrigatorios = [ "COD_OS",  "COD_UNIDADE",  "COD_CONTRATO",  "RAZAO_SOCIAL",  "CNPJ",  "SERVICO",  "VALOR_MES",  "VIGENCIA",  "CONTRATO_ANO_MES_INICIO",  "CONTRATO_ANO_MES_FIM",  "REF_TRI",  "REF_ANO_MES",  "IMG_CONTRATO" ]
+        self.camposObrigatorios = ["D", "COD_OS",  "COD_UNIDADE",  "COD_CONTRATO",  "RAZAO_SOCIAL",  "CNPJ",  "SERVICO",  "VALOR_MES",  "VIGENCIA",  "CONTRATO_ANO_MES_INICIO",  "CONTRATO_ANO_MES_FIM",  "REF_TRI",  "REF_ANO_MES",  "IMG_CONTRATO" ]
         self.camposMonetarios = ['VALOR_MES']
         self.limitesTamanho = { "RAZAO_SOCIAL" : 100 }
 
@@ -113,11 +113,11 @@ class ModeloArqruivos:
         self.limitesTamanho = { "DESC_MAT_SERV" : 700, "UNID_MED" : 50, "NF" : 20, "OBS" : 250, "COD_MAT_SERV" : 12}
 
     def modulo_receitas_tipo_importacao(self):
-        self.cabecalhoStr = ''
+        self.cabecalhoStr = 'D;'
         self.cabecalho =  ModeloArqruivos.trataCabecalho(self.cabecalhoStr)
         self.datasAbreviadas = []
         self.datasCompletas = []
-        self.camposObrigatorios = []
+        self.camposObrigatorios = ["D"]
         self.camposMonetarios = []
         self.limitesTamanho = { }        
 

@@ -171,7 +171,7 @@ class BaseDFImportacao:
         conta = self.df.at[index, 'CONTA_CORRENTE']
         dfFiltrado = self.dfContasBancarias[ (self.dfContasBancarias['codigo_agencia'] == int(agencia)) & (self.dfContasBancarias['conta_e_digito'] == conta) ]
         if dfFiltrado.empty:
-            resultado = f"Os campos AGENCIA e CONTA_CORRENTE não parecem corretos para esse contrato ({agencia}, {conta})"
+            resultado = f"Os campos AGENCIA e CONTA_CORRENTE não parecem corretos para esse contrato"
         return resultado    
 
     def check_full_dates(self, index):
